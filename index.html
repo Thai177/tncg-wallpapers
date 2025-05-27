@@ -4,13 +4,33 @@
     <meta charset="utf-8" />
     <title>TNCG Wallpapers</title>
     <script>
-      const images = [
+      const normalImages = [
         "https://drive.google.com/file/d/1kZTHGW_riMyLAf3emsA2phgCWA8XCNxR/view?usp=drive_link",
         "https://drive.google.com/file/d/1K-2VLbRKvanTU8PmK0fqKydlsJfb5MI8/view?usp=drive_link",
-        "https://drive.google.com/file/d/12zEI1CIbZn2hEBK6AjKDKeJi58oV2tZe/view?usp=drive_link",
       ];
-      const randomImage = images[Math.floor(Math.random() * images.length)];
-      window.location.href = randomImage;
+
+      const rareImage = "https://drive.google.com/file/d/12zEI1CIbZn2hEBK6AjKDKeJi58oV2tZe/view?usp=drive_link";
+      const rareChance = 1;
+
+      const normalChanceTotal = 100 - rareChance;
+      const normalWeight = normalChanceTotal / normalImages.length;
+
+      const weightedImages = [
+        ...normalImages.map(url => ({ url, weight: normalWeight })),
+        { url: rareImage, weight: rareChance }
+      ];
+
+      function weightedRandom(images) {
+        const totalWeight = images.reduce((sum, img) => sum + img.weight, 0);
+        let rand = Math.random() * totalWeight;
+        for (const img of images) {
+          if (rand < img.weight) return img.url;
+          rand -= img.weight;
+        }
+      }
+
+      const chosenImage = weightedRandom(weightedImages);
+      window.location.href = chosenImage;
     </script>
   </head>
 </html>
